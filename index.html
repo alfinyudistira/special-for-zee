@@ -4,12 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Untuk Zee 🌸</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root { --deep: #e75480; --dark: #7a2650; }
   * { box-sizing: border-box; }
   body {
     margin: 0; min-height: 100vh; overflow-x: hidden;
-    font-family: 'Segoe UI', Quicksand, Arial, sans-serif;
+    font-family: 'Quicksand', sans-serif;
     color: var(--dark);
     background: linear-gradient(135deg, #ffd6eb, #ffeaf5, #ffc2e0, #ffd6eb);
     background-size: 300% 300%;
@@ -35,33 +38,61 @@
     background: rgba(255,255,255,.78); border-radius: 28px; padding: 28px 22px;
     box-shadow: 0 12px 32px rgba(231,84,128,.28); max-width: 440px; width: 100%;
   }
-  h1 { font-size: 28px; margin: 6px 0 10px; color: var(--deep); }
-  .sub { font-size: 15px; opacity: .85; margin-bottom: 14px; }
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 30px; margin: 6px 0 10px; color: var(--deep);
+  }
+  .sub { font-size: 15px; opacity: .85; margin-bottom: 14px; font-weight: 500; }
 
   .cat { font-size: 64px; display: inline-block; animation: bob 1.4s infinite ease-in-out; }
   @keyframes bob { 50% { transform: translateY(-12px) rotate(-6deg); } }
 
-  input#pin {
-    padding: 14px 20px; border-radius: 999px; border: 2px dashed var(--deep);
-    width: 80%; font-size: 18px; text-align: center; outline: none; background: #fff; color: var(--dark);
+  .pin-box {
+    padding: 12px 20px; border-radius: 999px; border: 2px dashed var(--deep);
+    width: 82%; min-height: 48px; margin: 0 auto 14px;
+    font-size: 20px; font-weight: 700; letter-spacing: 5px;
+    display: flex; align-items: center; justify-content: center;
+    background: #fff; color: var(--dark); user-select: none;
   }
-  button {
+  .pin-placeholder {
+    font-size: 14px; font-weight: 500; letter-spacing: normal; opacity: .55;
+  }
+
+  .keypad {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    max-width: 240px; margin: 0 auto 6px;
+  }
+  .key {
+    margin-top: 0; padding: 11px 0; border-radius: 16px;
+    background: #fff; color: var(--deep); font-family: 'Quicksand', sans-serif;
+    font-size: 18px; font-weight: 700; border: 1.5px solid #ffc2d9;
+    box-shadow: 0 4px 0 #f3b6cc; cursor: pointer;
+    transition: transform .1s, box-shadow .1s;
+  }
+  .key:active { transform: translateY(3px); box-shadow: 0 1px 0 #f3b6cc; }
+  .key-action { background: #ffeaf5; color: var(--dark); font-size: 15px; }
+
+  button#unlock, button#next, button#restart {
     margin-top: 16px; padding: 13px 28px; border: none; border-radius: 999px;
-    background: var(--deep); color: #fff; font-size: 17px; font-weight: 600; cursor: pointer;
+    background: var(--deep); color: #fff; font-family: 'Quicksand', sans-serif;
+    font-size: 17px; font-weight: 700; cursor: pointer;
     box-shadow: 0 6px 0 #b83c64; transition: transform .1s, box-shadow .1s;
   }
-  button:hover { filter: brightness(1.05); }
-  button:active { transform: translateY(4px); box-shadow: 0 2px 0 #b83c64; }
+  button#unlock:hover, button#next:hover, button#restart:hover { filter: brightness(1.05); }
+  button#unlock:active, button#next:active, button#restart:active { transform: translateY(4px); box-shadow: 0 2px 0 #b83c64; }
   .hint { font-size: 13px; margin-top: 12px; opacity: .7; }
 
   #msg {
-    font-size: 23px; line-height: 1.45; min-height: 120px; margin: 14px 0 4px;
+    font-size: 22px; font-weight: 600; line-height: 1.5; min-height: 120px; margin: 14px 0 4px;
     animation: pop .5s ease;
   }
   @keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .counter { font-size: 13px; opacity: .6; }
 
-  .museum-title { font-family: Georgia, serif; font-size: 26px; color: var(--deep); margin: 4px 0; }
+  .museum-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px; font-weight: 700; color: var(--deep); margin: 4px 0;
+  }
   .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px; }
   .frame {
     background: linear-gradient(145deg, #f7dc8a, #c4953a); padding: 14px 14px 10px;
@@ -72,8 +103,9 @@
   .frame:hover { transform: rotate(0deg) scale(1.04); }
   .frame img { width: 160px; height: 210px; object-fit: cover; display: block; border: 4px solid #5b3a12; }
   .plaque {
-    background: #fffbea; color: #5b3a12; font-family: Georgia, serif; font-style: italic;
-    font-size: 12px; margin-top: 8px; padding: 6px 4px; border-radius: 2px;
+    background: #fffbea; color: #5b3a12;
+    font-family: 'Playfair Display', Georgia, serif; font-style: italic;
+    font-size: 12.5px; margin-top: 8px; padding: 6px 6px; border-radius: 2px;
   }
   .rosebar { font-size: 26px; letter-spacing: 6px; margin-top: 16px; }
 </style>
@@ -86,8 +118,23 @@
     <div class="cat">🐱</div>
     <h1>Ada yang spesial 🌷</h1>
     <p class="sub">Masukkan pin untuk membuka halaman ini.</p>
-    <input id="pin" type="text" placeholder="ketik pin di sini" maxlength="20">
-    <br>
+    <div class="pin-box" id="pin-display">
+      <span class="pin-placeholder">tekan angka di bawah</span>
+    </div>
+    <div class="keypad">
+      <button type="button" class="key" data-num="1">1</button>
+      <button type="button" class="key" data-num="2">2</button>
+      <button type="button" class="key" data-num="3">3</button>
+      <button type="button" class="key" data-num="4">4</button>
+      <button type="button" class="key" data-num="5">5</button>
+      <button type="button" class="key" data-num="6">6</button>
+      <button type="button" class="key" data-num="7">7</button>
+      <button type="button" class="key" data-num="8">8</button>
+      <button type="button" class="key" data-num="9">9</button>
+      <button type="button" class="key key-action" id="clear-pin">C</button>
+      <button type="button" class="key" data-num="0">0</button>
+      <button type="button" class="key key-action" id="del-pin">⌫</button>
+    </div>
     <button id="unlock">Buka 🔓</button>
     <p class="hint">Pinnya bebas kok, asal kamu coba 😉</p>
   </div>
@@ -111,11 +158,11 @@
     <div class="gallery">
       <div class="frame">
         <img src="foto1.jpeg" alt="Zee di depan Kickstart">
-        <div class="plaque">Zee, si paling manis di depan pintu biru</div>
+        <div class="plaque">zee, kamu kelihatan keren banget disini</div>
       </div>
       <div class="frame">
         <img src="foto2.jpeg" alt="Zee duduk di kafe">
-        <div class="plaque">Zee, tetap cantik walau cuma lewat layar</div>
+        <div class="plaque">zee kamu terlihat manisss bangettt disini</div>
       </div>
     </div>
     <div class="rosebar">🤍🌸🤍🐾🤍</div>
@@ -140,9 +187,38 @@
     $(id).classList.add('active');
   };
 
+  // Keypad PIN di layar (tanpa keyboard bawaan HP)
+  let pinValue = '';
+  function updatePinDisplay() {
+    if (pinValue.length === 0) {
+      $('pin-display').innerHTML = '<span class="pin-placeholder">tekan angka di bawah</span>';
+    } else {
+      $('pin-display').textContent = pinValue;
+    }
+  }
+
+  document.querySelectorAll('.key[data-num]').forEach(btn => {
+    btn.onclick = () => {
+      if (pinValue.length < 12) {
+        pinValue += btn.dataset.num;
+        updatePinDisplay();
+        floatOne('💕');
+      }
+    };
+  });
+
+  $('del-pin').onclick = () => {
+    pinValue = pinValue.slice(0, -1);
+    updatePinDisplay();
+  };
+
+  $('clear-pin').onclick = () => {
+    pinValue = '';
+    updatePinDisplay();
+  };
+
   // Pin: semua input diterima
   $('unlock').onclick = () => { show('s2'); index = 0; renderMsg(); burst(12); };
-  $('pin').addEventListener('keydown', e => { if (e.key === 'Enter') $('unlock').click(); });
 
   // Pesan bertahap
   let index = 0;
@@ -157,7 +233,7 @@
     if (index < messages.length - 1) { index++; renderMsg(); }
     else { show('s3'); burst(20); }
   };
-  $('restart').onclick = () => { index = 0; $('pin').value = ''; show('s1'); };
+  $('restart').onclick = () => { index = 0; pinValue = ''; updatePinDisplay(); show('s1'); };
 
   // Bunga & kucing melayang
   const items = ['🌸', '🌷', '🤍', '🐱', '🐾', '💕', '🌹', '😻', '✨'];
