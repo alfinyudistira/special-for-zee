@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Untuk Zee 🌸</title>
+<style>
+  :root { --deep: #e75480; --dark: #7a2650; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; overflow-x: hidden;
+    font-family: 'Segoe UI', Quicksand, Arial, sans-serif;
+    color: var(--dark);
+    background: linear-gradient(135deg, #ffd6eb, #ffeaf5, #ffc2e0, #ffd6eb);
+    background-size: 300% 300%;
+    animation: bgshift 14s ease infinite;
+  }
+  @keyframes bgshift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+  .float {
+    position: fixed; bottom: -60px; font-size: 26px; pointer-events: none;
+    z-index: 0; animation: rise linear forwards;
+  }
+  @keyframes rise {
+    from { transform: translateY(0) rotate(0deg); opacity: 1; }
+    to   { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
+  }
+
+  .screen { display: none; min-height: 100vh; flex-direction: column; align-items: center;
+    justify-content: center; padding: 24px; text-align: center; position: relative; z-index: 1; }
+  .screen.active { display: flex; animation: fadeUp .6s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+  .card {
+    background: rgba(255,255,255,.78); border-radius: 28px; padding: 28px 22px;
+    box-shadow: 0 12px 32px rgba(231,84,128,.28); max-width: 440px; width: 100%;
+  }
+  h1 { font-size: 28px; margin: 6px 0 10px; color: var(--deep); }
+  .sub { font-size: 15px; opacity: .85; margin-bottom: 14px; }
+
+  .cat { font-size: 64px; display: inline-block; animation: bob 1.4s infinite ease-in-out; }
+  @keyframes bob { 50% { transform: translateY(-12px) rotate(-6deg); } }
+
+  input#pin {
+    padding: 14px 20px; border-radius: 999px; border: 2px dashed var(--deep);
+    width: 80%; font-size: 18px; text-align: center; outline: none; background: #fff; color: var(--dark);
+  }
+  button {
+    margin-top: 16px; padding: 13px 28px; border: none; border-radius: 999px;
+    background: var(--deep); color: #fff; font-size: 17px; font-weight: 600; cursor: pointer;
+    box-shadow: 0 6px 0 #b83c64; transition: transform .1s, box-shadow .1s;
+  }
+  button:hover { filter: brightness(1.05); }
+  button:active { transform: translateY(4px); box-shadow: 0 2px 0 #b83c64; }
+  .hint { font-size: 13px; margin-top: 12px; opacity: .7; }
+
+  #msg {
+    font-size: 23px; line-height: 1.45; min-height: 120px; margin: 14px 0 4px;
+    animation: pop .5s ease;
+  }
+  @keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .counter { font-size: 13px; opacity: .6; }
+
+  .museum-title { font-family: Georgia, serif; font-size: 26px; color: var(--deep); margin: 4px 0; }
+  .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px; }
+  .frame {
+    background: linear-gradient(145deg, #f7dc8a, #c4953a); padding: 14px 14px 10px;
+    border-radius: 6px; box-shadow: 0 10px 24px rgba(0,0,0,.28);
+    transform: rotate(-2deg); transition: transform .3s;
+  }
+  .frame:nth-child(2) { transform: rotate(2deg); }
+  .frame:hover { transform: rotate(0deg) scale(1.04); }
+  .frame img { width: 160px; height: 210px; object-fit: cover; display: block; border: 4px solid #5b3a12; }
+  .plaque {
+    background: #fffbea; color: #5b3a12; font-family: Georgia, serif; font-style: italic;
+    font-size: 12px; margin-top: 8px; padding: 6px 4px; border-radius: 2px;
+  }
+  .rosebar { font-size: 26px; letter-spacing: 6px; margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<!-- LAYAR 1: PIN -->
+<section class="screen active" id="s1">
+  <div class="card">
+    <div class="cat">🐱</div>
+    <h1>Ada yang spesial 🌷</h1>
+    <p class="sub">Masukkan pin untuk membuka halaman ini.</p>
+    <input id="pin" type="text" placeholder="ketik pin di sini" maxlength="20">
+    <br>
+    <button id="unlock">Buka 🔓</button>
+    <p class="hint">Pinnya bebas kok, asal kamu coba 😉</p>
+  </div>
+</section>
+
+<!-- LAYAR 2: PESAN -->
+<section class="screen" id="s2">
+  <div class="card">
+    <div class="cat">😺</div>
+    <div id="msg"></div>
+    <p class="counter" id="counter"></p>
+    <button id="next">Lanjut 💕</button>
+  </div>
+</section>
+
+<!-- LAYAR 3: GALERI MUSEUM -->
+<section class="screen" id="s3">
+  <div class="card">
+    <div class="museum-title">🏛️ Pameran Khusus: Zee</div>
+    <p class="sub">Koleksi paling indah hari ini dan seterusnya</p>
+    <div class="gallery">
+      <div class="frame">
+        <img src="foto1.jpeg" alt="Zee di depan Kickstart">
+        <div class="plaque">Zee, si paling manis di depan pintu biru</div>
+      </div>
+      <div class="frame">
+        <img src="foto2.jpeg" alt="Zee duduk di kafe">
+        <div class="plaque">Zee, tetap cantik walau cuma lewat layar</div>
+      </div>
+    </div>
+    <div class="rosebar">🤍🌸🤍🐾🤍</div>
+    <button id="restart">Ulang dari awal 🌷</button>
+  </div>
+</section>
+
+<script>
+  const messages = [
+    "Hai Zee 🌷 aku bikin ini khusus buat kamu, pelan-pelan aja bacanya ya.",
+    "Semangat kerjanya ya, Zee! Aku yakin kamu bisa menyelesaikan semuanya dengan cantik 💪",
+    "Kamu cantik banget deh, Zee. Serius, dari tadi aku mikirin itu terus ✨",
+    "Semoga harinya lancar, tugasnya ringan, dan pikirannya tenang 🤍",
+    "Kalau sudah waktunya makan, jangan lupa makan ya 🍱 Jangan sampai kelaparan karena keasyikan kerja.",
+    "Aku mungkin belum tahu semua hal tentang kamu, tapi tiap ngobrol sama kamu, hariku jadi lebih manis 🌸",
+    "Makasih ya sudah mau baca ini. Sekarang lihat galerinya, ada beberapa fotomu yang aku simpan di sini 🏛️"
+  ];
+
+  const $ = id => document.getElementById(id);
+  const show = id => {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    $(id).classList.add('active');
+  };
+
+  // Pin: semua input diterima
+  $('unlock').onclick = () => { show('s2'); index = 0; renderMsg(); burst(12); };
+  $('pin').addEventListener('keydown', e => { if (e.key === 'Enter') $('unlock').click(); });
+
+  // Pesan bertahap
+  let index = 0;
+  function renderMsg() {
+    $('msg').textContent = messages[index];
+    $('msg').style.animation = 'none'; void $('msg').offsetWidth; $('msg').style.animation = '';
+    $('counter').textContent = `${index + 1} / ${messages.length}`;
+    $('next').textContent = index === messages.length - 1 ? 'Lihat galeri 🏛️' : 'Lanjut 💕';
+    burst(4);
+  }
+  $('next').onclick = () => {
+    if (index < messages.length - 1) { index++; renderMsg(); }
+    else { show('s3'); burst(20); }
+  };
+  $('restart').onclick = () => { index = 0; $('pin').value = ''; show('s1'); };
+
+  // Bunga & kucing melayang
+  const items = ['🌸', '🌷', '🤍', '🐱', '🐾', '💕', '🌹', '😻', '✨'];
+  function floatOne(emoji) {
+    const el = document.createElement('div');
+    el.className = 'float';
+    el.textContent = emoji;
+    el.style.left = Math.random() * 96 + 'vw';
+    const dur = 6 + Math.random() * 6;
+    el.style.animationDuration = dur + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), dur * 1000);
+  }
+  function burst(n) {
+    for (let i = 0; i < n; i++) setTimeout(() => floatOne(items[Math.floor(Math.random() * items.length)]), i * 120);
+  }
+  setInterval(() => floatOne(items[Math.floor(Math.random() * items.length)]), 1400);
+</script>
+</body>
+</html>
