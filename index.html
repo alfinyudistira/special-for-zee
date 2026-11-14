@@ -471,122 +471,34 @@
   };
 
   /* =========================================================
-     MUSIC BOX SYNTHESIZER: "Night Changes" - One Direction
+     PEMUTAR MUSIK MP3 (musik.mp3)
      ========================================================= */
-  let audioCtx = null;
+  const bgMusic = $('bg-music');
   let isPlaying = false;
-  let seqTimer = null;
-  let stepIdx = 0;
-
-  // Melodi Chorus "Night Changes" (dalam kunci G Mayor, tempo lembut)
-  // Format: [frekuensiMelodi, frekuensiBass (opsional), durasiMs]
-  const N = {
-    G3: 196.00, A3: 220.00, B3: 246.94, C4: 261.63, D4: 293.66, E4: 329.63,
-    Fs4: 369.99, G4: 392.00, A4: 440.00, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25
-  };
-
-  const nightChangesSeq = [
-    // "We're on-ly get-ting ol-der, ba-by"
-    [N.B4, N.C4, 340], [N.D5, null, 340], [N.D5, null, 340], [N.D5, N.G3, 340],
-    [N.E5, null, 340], [N.D5, null, 340], [N.B4, N.D4, 420], [N.A4, null, 360], [N.G4, null, 680],
-    // "And I've been thin-king 'bout it late-ly"
-    [N.B4, N.E4, 340], [N.D5, null, 340], [N.D5, null, 340], [N.D5, N.B3, 340],
-    [N.E5, null, 340], [N.D5, null, 340], [N.B4, N.C4, 420], [N.A4, null, 360], [N.G4, null, 680],
-    // "Does it e-ver drive you cra-zy"
-    [N.B4, N.C4, 340], [N.B4, null, 340], [N.D5, null, 340], [N.D5, N.D4, 340],
-    [N.E5, null, 360], [N.D5, null, 360], [N.B4, N.E4, 440], [N.A4, null, 580],
-    // "Just how fast the night chan-ges"
-    [N.G4, N.B3, 340], [N.A4, null, 340], [N.B4, N.C4, 420], [N.A4, null, 360],
-    [N.G4, N.D4, 420], [N.E4, null, 420], [N.D4, N.G3, 820],
-    // "E-very-thing that you've e-ver dreamed of"
-    [N.B4, N.C4, 340], [N.D5, null, 340], [N.D5, null, 340], [N.D5, N.G3, 340],
-    [N.E5, null, 340], [N.D5, null, 340], [N.B4, N.D4, 420], [N.A4, null, 360], [N.G4, null, 680],
-    // "Di-sap-pea-ring when you wake up"
-    [N.B4, N.E4, 340], [N.D5, null, 340], [N.D5, null, 340], [N.D5, N.B3, 340],
-    [N.E5, null, 340], [N.D5, null, 340], [N.B4, N.C4, 440], [N.A4, null, 580],
-    // "But there's no-thing to be a-fraid of"
-    [N.G4, N.C4, 340], [N.B4, null, 340], [N.D5, null, 340], [N.D5, N.D4, 340],
-    [N.E5, null, 360], [N.D5, null, 360], [N.B4, N.E4, 440], [N.A4, null, 360], [N.G4, null, 620],
-    // "E-ven when the night chan-ges"
-    [N.G4, N.C4, 340], [N.A4, null, 340], [N.B4, N.D4, 420], [N.A4, null, 360],
-    [N.G4, N.E4, 420], [N.E4, null, 420], [N.D4, N.B3, 760],
-    // "It will ne-ver change me and you"
-    [N.D4, N.C4, 320], [N.E4, null, 320], [N.G4, N.D4, 360], [N.A4, null, 360],
-    [N.B4, N.G3, 460], [N.A4, null, 420], [N.G4, null, 440], [N.G4, N.G3, 1200]
-  ];
-
-  function playMusicBoxNote(freq, volume = 0.09, decay = 1.5) {
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-
-    // Nada utama lembut (sine) + kilau denting kotak musik (triangle halus)
-    const osc1 = audioCtx.createOscillator();
-    const osc2 = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    const filter = audioCtx.createBiquadFilter();
-
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(freq, now);
-
-    osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(freq * 2, now); // harmonik oktaf atas halus
-
-    const overtoneGain = audioCtx.createGain();
-    overtoneGain.gain.setValueAtTime(0.14, now);
-
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(2400, now);
-
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(volume, now + 0.018);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
-
-    osc1.connect(filter);
-    osc2.connect(overtoneGain);
-    overtoneGain.connect(filter);
-    filter.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc1.start(now);
-    osc2.start(now);
-    osc1.stop(now + decay + 0.05);
-    osc2.stop(now + decay + 0.05);
-  }
-
-  function scheduleNextNote() {
-    if (!isPlaying) return;
-    const [melody, bass, dur] = nightChangesSeq[stepIdx];
-    if (melody) playMusicBoxNote(melody, 0.085, 1.45);
-    if (bass) playMusicBoxNote(bass, 0.04, 1.8);
-
-    stepIdx = (stepIdx + 1) % nightChangesSeq.length;
-    seqTimer = setTimeout(scheduleNextNote, dur);
-  }
+  let userPaused = false;
 
   function startMusic() {
-    if (!audioCtx) {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      audioCtx = new AudioContextClass();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-    if (!isPlaying) {
+    if (userPaused || isPlaying) return;
+    bgMusic.play().then(() => {
       isPlaying = true;
       $('music-toggle').classList.add('playing');
-      scheduleNextNote();
-    }
+    }).catch(() => {});
   }
 
   function stopMusic() {
+    bgMusic.pause();
     isPlaying = false;
-    clearTimeout(seqTimer);
     $('music-toggle').classList.remove('playing');
   }
 
   $('music-toggle').onclick = () => {
-    if (isPlaying) stopMusic();
-    else startMusic();
+    if (isPlaying) {
+      userPaused = true;
+      stopMusic();
+    } else {
+      userPaused = false;
+      startMusic();
+    }
   };
 
   /* =========================================================
@@ -618,7 +530,7 @@
 
   document.querySelectorAll('.key[data-num]').forEach(btn => {
     btn.onclick = () => {
-      if (!isPlaying && !audioCtx) startMusic();
+      startMusic();
       if (pinValue.length < 12) {
         pinValue += btn.dataset.num;
         updatePinDisplay();
@@ -638,7 +550,7 @@
   };
 
   $('unlock').onclick = () => {
-    if (!isPlaying && !audioCtx) startMusic();
+    startMusic();
     show('s2');
     index = 0;
     renderMsg();
